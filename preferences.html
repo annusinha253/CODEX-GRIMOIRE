@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preferences - AR Tourist Guide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="preferences.css">
+</head>
+<body>
+    <div class="container preferences-container">
+        <div class="preferences-content">
+            <div class="header">
+                <h1>Customize Your Experience</h1>
+                <p>Set your preferences for a personalized journey</p>
+            </div>
+            
+            <div class="preferences-form">
+                <div class="section">
+                    <h2>Interests</h2>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="history" checked>
+                            <label for="history">History</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="architecture" checked>
+                            <label for="architecture">Architecture</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="art">
+                            <label for="art">Art</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="culture" checked>
+                            <label for="culture">Culture</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="food">
+                            <label for="food">Food</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>Accessibility</h2>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="audioGuide" checked>
+                            <label for="audioGuide">Audio Guide</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="textToSpeech">
+                            <label for="textToSpeech">Text to Speech</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="highContrast">
+                            <label for="highContrast">High Contrast</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>Notifications</h2>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="nearby" checked>
+                            <label for="nearby">Nearby Attractions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="updates" checked>
+                            <label for="updates">Updates</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="community">
+                            <label for="community">Community Tips</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="save-btn" class="primary-btn">Save Preferences</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                // Redirect to login page if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // DOM Elements
+            const saveBtn = document.getElementById('save-btn');
+            
+            // Interest checkboxes
+            const historyCheckbox = document.getElementById('history');
+            const architectureCheckbox = document.getElementById('architecture');
+            const artCheckbox = document.getElementById('art');
+            const cultureCheckbox = document.getElementById('culture');
+            const foodCheckbox = document.getElementById('food');
+            
+            // Accessibility checkboxes
+            const audioGuideCheckbox = document.getElementById('audioGuide');
+            const textToSpeechCheckbox = document.getElementById('textToSpeech');
+            const highContrastCheckbox = document.getElementById('highContrast');
+            
+            // Notification checkboxes
+            const nearbyCheckbox = document.getElementById('nearby');
+            const updatesCheckbox = document.getElementById('updates');
+            const communityCheckbox = document.getElementById('community');
+            
+            // Load saved preferences if they exist
+            const savedPreferences = localStorage.getItem('userPreferences');
+            if (savedPreferences) {
+                const preferences = JSON.parse(savedPreferences);
+                
+                // Set interests
+                historyCheckbox.checked = preferences.interests.history;
+                architectureCheckbox.checked = preferences.interests.architecture;
+                artCheckbox.checked = preferences.interests.art;
+                cultureCheckbox.checked = preferences.interests.culture;
+                foodCheckbox.checked = preferences.interests.food;
+                
+                // Set accessibility
+                audioGuideCheckbox.checked = preferences.accessibility.audioGuide;
+                textToSpeechCheckbox.checked = preferences.accessibility.textToSpeech;
+                highContrastCheckbox.checked = preferences.accessibility.highContrast;
+                
+                // Set notifications
+                nearbyCheckbox.checked = preferences.notifications.nearby;
+                updatesCheckbox.checked = preferences.notifications.updates;
+                communityCheckbox.checked = preferences.notifications.community;
+            }
+            
+            // Save Button Event Listener
+            saveBtn.addEventListener('click', function() {
+                // Gather all preferences
+                const preferences = {
+                    interests: {
+                        history: historyCheckbox.checked,
+                        architecture: architectureCheckbox.checked,
+                        art: artCheckbox.checked,
+                        culture: cultureCheckbox.checked,
+                        food: foodCheckbox.checked
+                    },
+                    accessibility: {
+                        audioGuide: audioGuideCheckbox.checked,
+                        textToSpeech: textToSpeechCheckbox.checked,
+                        highContrast: highContrastCheckbox.checked
+                    },
+                    notifications: {
+                        nearby: nearbyCheckbox.checked,
+                        updates: updatesCheckbox.checked,
+                        community: communityCheckbox.checked
+                    }
+                };
+                
+                // Save preferences to localStorage
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+                
+                // Show success message
+                alert('Preferences saved successfully!');
+                
+                // Redirect to home page
+                window.location.href = 'home.html';
+            });
+        });
+    </script>
+</body>
+</html> 

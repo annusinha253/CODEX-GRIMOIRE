@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - AR Tourist Guide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <div class="container home-container">
+        <div class="home-content">
+            <div class="header">
+                <h1>AR Tourist Guide</h1>
+                <p>Your personalized travel companion</p>
+            </div>
+            
+            <div class="ar-section">
+                <h2>Start Exploring</h2>
+                <p>Access the AR features to discover monuments and attractions around you.</p>
+                <button id="ar-btn" class="primary-btn">Launch AR Experience</button>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏛️</div>
+                    <h3>Monument Recognition</h3>
+                    <p>Scan monuments to get detailed information</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🗣️</div>
+                    <h3>Virtual Guide</h3>
+                    <p>Get spoken guidance in multiple languages</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>Smart Suggestions</h3>
+                    <p>Personalized suggestions based on your interests</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Community Tips</h3>
+                    <p>Discover hidden gems from other travelers</p>
+                </div>
+            </div>
+            
+            <button id="logout-btn" class="secondary-btn">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                // Redirect to login page if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // DOM Elements
+            const arBtn = document.getElementById('ar-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            // AR Button Event Listener
+            arBtn.addEventListener('click', function() {
+                // In a real app, this would launch the AR experience
+                alert('AR functionality would be implemented here in a production app.\n\nThis would typically use WebXR or a device camera API to provide an augmented reality experience.');
+            });
+
+            // Logout Button Event Listener
+            logoutBtn.addEventListener('click', function() {
+                // Clear user data from localStorage
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userPreferences');
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            });
+
+            // Check if user has set preferences
+            const userPreferences = localStorage.getItem('userPreferences');
+            if (userPreferences) {
+                // Parse user preferences
+                const preferences = JSON.parse(userPreferences);
+                
+                // Example of using preferences to customize content (in a real app)
+                console.log('User preferences loaded:', preferences);
+                
+                // You could use these preferences to customize the UI
+                // For example, if they're interested in history, show more historical content
+                if (preferences.interests.history) {
+                    console.log('User is interested in history');
+                }
+                
+                // Apply accessibility settings
+                if (preferences.accessibility.highContrast) {
+                    // In a real app, you would apply high contrast styles
+                    console.log('High contrast mode would be enabled');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
