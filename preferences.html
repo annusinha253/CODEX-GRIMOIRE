@@ -4,199 +4,215 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preferences - AR Tourist Guide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* styles.css */
-        * {
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background-attachment: fixed;
         }
 
-        body {
-            background: linear-gradient(135deg, #3498db, #8e44ad);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 20px;
-        }
-
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            color: #3498db;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .input-group label {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .input-group input {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-
-        .primary-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .primary-btn:hover {
-            background-color: #2980b9;
-        }
-
-        .signup-text {
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .signup-text a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .signup-text a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .login-container {
-                padding: 30px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 20px;
-            }
-        }
-
-        /* preferences.css */
         .preferences-container {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 30px 0;
         }
 
         .preferences-content {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             padding: 40px;
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            background: linear-gradient(to right, #ff6b6b, #6b47ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #636e72;
+            font-size: 18px;
+        }
+
+        .logo {
+            display: inline-block;
+            background: linear-gradient(135deg, #fa71cd, #9b59b6);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(155, 89, 182, 0.3);
+        }
+
+        .logo i {
+            color: white;
         }
 
         .section {
-            margin-bottom: 30px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-        }
-
-        .section:last-child {
-            border-bottom: none;
+            margin-bottom: 35px;
+            border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+            padding-bottom: 35px;
         }
 
         .section h2 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: #3498db;
+            font-size: 26px;
+            margin-bottom: 25px;
+            color: #6c5ce7;
+            position: relative;
+            display: inline-block;
+            font-weight: 600;
         }
 
-        .checkbox-group {
+        .section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            border-radius: 4px;
+        }
+
+        .interest-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 10px;
         }
 
-        .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #3498db;
+        .interest-card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            cursor: pointer;
+            background: white;
+            height: 100px;
+            width: 100%;
+            aspect-ratio: 1/1;
         }
 
-        .checkbox-item label {
-            font-size: 16px;
+        .interest-card img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .interest-check {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 10px;
+        }
+
+        .interest-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6c5ce7;
             cursor: pointer;
+            margin-bottom: 5px;
+            z-index: 11;
+        }
+
+        .interest-check label {
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 5px;
+            border-radius: 12px;
+            z-index: 11;
+            text-align: center;
         }
 
         .primary-btn {
-            margin-top: 20px;
+            margin-top: 40px;
             width: 100%;
+            position: relative;
+            overflow: hidden;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
         }
 
-        /* Responsive design */
+        .primary-btn:hover {
+            background: linear-gradient(135deg, #5649c0, #6c5ce7);
+            box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4);
+            transform: translateY(-3px);
+        }
+
         @media (max-width: 768px) {
             .preferences-content {
                 padding: 30px;
             }
             
-            .checkbox-group {
-                grid-template-columns: 1fr;
+            .interest-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .preferences-content {
+                padding: 25px;
+                margin: 15px;
+            }
+            
+            .interest-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 24px;
             }
         }
     </style>
@@ -205,74 +221,102 @@
     <div class="container preferences-container">
         <div class="preferences-content">
             <div class="header">
+                <div class="logo">
+                    <i class="fas fa-globe-americas fa-2x"></i>
+                </div>
                 <h1>Customize Your Experience</h1>
                 <p>Set your preferences for a personalized journey</p>
             </div>
             
             <div class="preferences-form">
                 <div class="section">
-                    <h2>Interests</h2>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="history" checked>
-                            <label for="history">History</label>
+                    <h2><i class="fas fa-plane"></i> Pick Your Travel Vibe</h2>
+                    <div class="interest-grid">
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/1051073/pexels-photo-1051073.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Adventure">
+                            <div class="interest-check">
+                                <input type="checkbox" id="adventure">
+                                <label for="adventure">🏔 Adventure</label>
+                            </div>
                         </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="architecture" checked>
-                            <label for="architecture">Architecture</label>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/1510659/pexels-photo-1510659.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Beach">
+                            <div class="interest-check">
+                                <input type="checkbox" id="beach">
+                                <label for="beach">🏖 Beach</label>
+                            </div>
                         </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="art">
-                            <label for="art">Art</label>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/3352393/pexels-photo-3352393.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Heritage">
+                            <div class="interest-check">
+                                <input type="checkbox" id="heritage">
+                                <label for="heritage">🕌 Heritage</label>
+                            </div>
                         </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="culture" checked>
-                            <label for="culture">Culture</label>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/1659438/pexels-photo-1659438.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Nature">
+                            <div class="interest-check">
+                                <input type="checkbox" id="nature">
+                                <label for="nature">🌲 Nature</label>
+                            </div>
                         </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="food">
-                            <label for="food">Food</label>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/3560044/pexels-photo-3560044.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Spiritual">
+                            <div class="interest-check">
+                                <input type="checkbox" id="spiritual">
+                                <label for="spiritual">🧘‍♂ Spiritual</label>
+                            </div>
+                        </div>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Food">
+                            <div class="interest-check">
+                                <input type="checkbox" id="food">
+                                <label for="food">🥘 Food</label>
+                            </div>
+                        </div>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/2381463/pexels-photo-2381463.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Festivals">
+                            <div class="interest-check">
+                                <input type="checkbox" id="festivals">
+                                <label for="festivals">🎉 Festivals</label>
+                            </div>
+                        </div>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/1671324/pexels-photo-1671324.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Photography">
+                            <div class="interest-check">
+                                <input type="checkbox" id="photography">
+                                <label for="photography">📸 Hill Station</label>
+                            </div>
+                        </div>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/1050244/pexels-photo-1050244.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Shopping">
+                            <div class="interest-check">
+                                <input type="checkbox" id="shopping">
+                                <label for="shopping">🛍 Shopping</label>
+                            </div>
+                        </div>
+                        
+                        <div class="interest-card">
+                            <img src="https://images.pexels.com/photos/6177527/pexels-photo-6177527.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Offbeat">
+                            <div class="interest-check">
+                                <input type="checkbox" id="offbeat">
+                                <label for="offbeat">🧳 Offbeat</label>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="section">
-                    <h2>Accessibility</h2>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="audioGuide" checked>
-                            <label for="audioGuide">Audio Guide</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="textToSpeech">
-                            <label for="textToSpeech">Text to Speech</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="highContrast">
-                            <label for="highContrast">High Contrast</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h2>Notifications</h2>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="nearby" checked>
-                            <label for="nearby">Nearby Attractions</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="updates" checked>
-                            <label for="updates">Updates</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="community">
-                            <label for="community">Community Tips</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="save-btn" class="primary-btn">Save Preferences</button>
+                <button id="save-btn" class="primary-btn">
+                    <i class="fas fa-save"></i> Save Preferences
+                </button>
             </div>
         </div>
     </div>
@@ -291,65 +335,98 @@
             const saveBtn = document.getElementById('save-btn');
             
             // Interest checkboxes
-            const historyCheckbox = document.getElementById('history');
-            const architectureCheckbox = document.getElementById('architecture');
-            const artCheckbox = document.getElementById('art');
-            const cultureCheckbox = document.getElementById('culture');
+            const adventureCheckbox = document.getElementById('adventure');
+            const beachCheckbox = document.getElementById('beach');
+            const heritageCheckbox = document.getElementById('heritage');
+            const natureCheckbox = document.getElementById('nature');
+            const spiritualCheckbox = document.getElementById('spiritual');
             const foodCheckbox = document.getElementById('food');
-            
-            // Accessibility checkboxes
-            const audioGuideCheckbox = document.getElementById('audioGuide');
-            const textToSpeechCheckbox = document.getElementById('textToSpeech');
-            const highContrastCheckbox = document.getElementById('highContrast');
-            
-            // Notification checkboxes
-            const nearbyCheckbox = document.getElementById('nearby');
-            const updatesCheckbox = document.getElementById('updates');
-            const communityCheckbox = document.getElementById('community');
+            const festivalsCheckbox = document.getElementById('festivals');
+            const photographyCheckbox = document.getElementById('photography');
+            const shoppingCheckbox = document.getElementById('shopping');
+            const offbeatCheckbox = document.getElementById('offbeat');
             
             // Load saved preferences if they exist
             const savedPreferences = localStorage.getItem('userPreferences');
             if (savedPreferences) {
                 const preferences = JSON.parse(savedPreferences);
                 
-                // Set interests
-                historyCheckbox.checked = preferences.interests.history;
-                architectureCheckbox.checked = preferences.interests.architecture;
-                artCheckbox.checked = preferences.interests.art;
-                cultureCheckbox.checked = preferences.interests.culture;
-                foodCheckbox.checked = preferences.interests.food;
-                
-                // Set accessibility
-                audioGuideCheckbox.checked = preferences.accessibility.audioGuide;
-                textToSpeechCheckbox.checked = preferences.accessibility.textToSpeech;
-                highContrastCheckbox.checked = preferences.accessibility.highContrast;
-                
-                // Set notifications
-                nearbyCheckbox.checked = preferences.notifications.nearby;
-                updatesCheckbox.checked = preferences.notifications.updates;
-                communityCheckbox.checked = preferences.notifications.community;
+                // Set interests if they exist in saved preferences
+                if (preferences.interests) {
+                    adventureCheckbox.checked = preferences.interests.adventure || false;
+                    beachCheckbox.checked = preferences.interests.beach || false;
+                    heritageCheckbox.checked = preferences.interests.heritage || false;
+                    natureCheckbox.checked = preferences.interests.nature || false;
+                    spiritualCheckbox.checked = preferences.interests.spiritual || false;
+                    foodCheckbox.checked = preferences.interests.food || false;
+                    festivalsCheckbox.checked = preferences.interests.festivals || false;
+                    photographyCheckbox.checked = preferences.interests.photography || false;
+                    shoppingCheckbox.checked = preferences.interests.shopping || false;
+                    offbeatCheckbox.checked = preferences.interests.offbeat || false;
+                }
             }
+            
+            // Add click event to cards to toggle checkbox
+            const interestCards = document.querySelectorAll('.interest-card');
+            interestCards.forEach(card => {
+                // Apply initial blur effect for checked checkboxes
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                const img = card.querySelector('img');
+                if (checkbox.checked) {
+                    img.style.filter = 'blur(2px) brightness(0.7)';
+                    card.style.boxShadow = '0 0 0 2px #6c5ce7';
+                }
+                
+                card.addEventListener('click', function(e) {
+                    // Don't toggle if user clicked directly on checkbox
+                    if (e.target.type !== 'checkbox') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        
+                        // Apply blur effect on the image when checkbox is checked
+                        const img = this.querySelector('img');
+                        if (checkbox.checked) {
+                            img.style.filter = 'blur(2px) brightness(0.7)';
+                            this.style.boxShadow = '0 0 0 2px #6c5ce7';
+                        } else {
+                            img.style.filter = 'none';
+                            this.style.boxShadow = '';
+                        }
+                    }
+                });
+            });
+            
+            // Also handle checkbox click directly
+            const checkboxes = document.querySelectorAll('.interest-check input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const card = this.closest('.interest-card');
+                    const img = card.querySelector('img');
+                    if (this.checked) {
+                        img.style.filter = 'blur(2px) brightness(0.7)';
+                        card.style.boxShadow = '0 0 0 2px #6c5ce7';
+                    } else {
+                        img.style.filter = 'none';
+                        card.style.boxShadow = '';
+                    }
+                });
+            });
             
             // Save Button Event Listener
             saveBtn.addEventListener('click', function() {
                 // Gather all preferences
                 const preferences = {
                     interests: {
-                        history: historyCheckbox.checked,
-                        architecture: architectureCheckbox.checked,
-                        art: artCheckbox.checked,
-                        culture: cultureCheckbox.checked,
-                        food: foodCheckbox.checked
-                    },
-                    accessibility: {
-                        audioGuide: audioGuideCheckbox.checked,
-                        textToSpeech: textToSpeechCheckbox.checked,
-                        highContrast: highContrastCheckbox.checked
-                    },
-                    notifications: {
-                        nearby: nearbyCheckbox.checked,
-                        updates: updatesCheckbox.checked,
-                        community: communityCheckbox.checked
+                        adventure: adventureCheckbox.checked,
+                        beach: beachCheckbox.checked,
+                        heritage: heritageCheckbox.checked,
+                        nature: natureCheckbox.checked,
+                        spiritual: spiritualCheckbox.checked,
+                        food: foodCheckbox.checked,
+                        festivals: festivalsCheckbox.checked,
+                        photography: photographyCheckbox.checked,
+                        shopping: shoppingCheckbox.checked,
+                        offbeat: offbeatCheckbox.checked
                     }
                 };
                 
@@ -365,4 +442,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
