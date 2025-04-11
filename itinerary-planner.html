@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Itinerary Planner - AR Tourist Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --secondary-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            --accent-gradient: linear-gradient(to right, #ff6b6b, #6b47ff);
+            --primary-purple: #6c5ce7;
+            --primary-blue: #2575fc;
+            --light-purple: #a29bfe;
+            --dark-purple: #5649c0;
+            --white: #ffffff;
+            --light-gray: #f5f7fa;
+            --dark-text: #333;
+            --medium-text: #636e72;
+            --accent-green: #6BF178;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--white);
+            transition: all 0.3s ease;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Header with back button */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-5px);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* Content area */
+        .content-area {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 3px;
+        }
+
+        /* Plan form */
+        .plan-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--white);
+            font-size: 16px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .interests-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .interest-chip {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .interest-chip.active {
+            background: var(--secondary-gradient);
+            border-color: transparent;
+        }
+
+        .interest-chip:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .interest-chip.active:hover {
+            background: var(--secondary-gradient);
+            opacity: 0.9;
+        }
+
+        .plan-btn {
+            background: var(--secondary-gradient);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .plan-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .plan-btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Itinerary display */
+        .itinerary-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .itinerary-day {
+            margin-bottom: 30px;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .day-number {
+            background: var(--secondary-gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .day-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .day-activities {
+            margin-left: 20px;
+            position: relative;
+        }
+
+        .day-activities::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        .activity-item {
+            padding: 15px 0 15px 30px;
+            position: relative;
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            background: var(--white);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .activity-time {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--light-purple);
+            margin-bottom: 5px;
+        }
+
+        .activity-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .activity-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        .activity-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 8px;
+        }
+
+        .download-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .plan-form {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .interests-grid {
+                gap: 8px;
+            }
+
+            .interest-chip {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .day-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .activity-item {
+                padding-left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="home.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="page-title">Smart Itinerary Planner</h1>
+        </div>
+
+        <div class="content-area">
+            <h2 class="section-title">Create Your Perfect Trip</h2>
+            <p>Let us plan the ideal itinerary based on your preferences and schedule.</p>
+
+            <div class="plan-form">
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" class="form-input" placeholder="Where are you going?">
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Duration (days)</label>
+                    <input type="number" id="duration" class="form-input" placeholder="How many days?" min="1" max="14" value="3">
+                </div>
+
+                <div class="form-group">
+                    <label for="start-date">Start Date</label>
+                    <input type="date" id="start-date" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">Budget Range</label>
+                    <select id="budget" class="form-input">
+                        <option value="budget">Budget Friendly</option>
+                        <option value="moderate" selected>Moderate</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label>Interests</label>
+                    <div class="interests-grid">
+                        <div class="interest-chip" data-interest="adventure">
+                            <i class="fas fa-hiking"></i> Adventure
+                        </div>
+                        <div class="interest-chip" data-interest="beach">
+                            <i class="fas fa-umbrella-beach"></i> Beach
+                        </div>
+                        <div class="interest-chip" data-interest="culture">
+                            <i class="fas fa-landmark"></i> Culture
+                        </div>
+                        <div class="interest-chip" data-interest="food">
+                            <i class="fas fa-utensils"></i> Food
+                        </div>
+                        <div class="interest-chip" data-interest="nature">
+                            <i class="fas fa-tree"></i> Nature
+                        </div>
+                        <div class="interest-chip" data-interest="shopping">
+                            <i class="fas fa-shopping-bag"></i> Shopping
+                        </div>
+                        <div class="interest-chip" data-interest="relaxation">
+                            <i class="fas fa-spa"></i> Relaxation
+                        </div>
+                        <div class="interest-chip" data-interest="nightlife">
+                            <i class="fas fa-cocktail"></i> Nightlife
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label for="special-requirements">Special Requirements (optional)</label>
+                    <textarea id="special-requirements" class="form-input" rows="3" placeholder="Any accessibility needs, dietary restrictions, or other special requests?"></textarea>
+                </div>
+
+                <div class="form-group form-group-full">
+                    <button id="generate-plan-btn" class="plan-btn">
+                        <i class="fas fa-magic"></i> Generate Itinerary
+                    </button>
+                </div>
+            </div>
+
+            <!-- Itinerary will be displayed here after generation -->
+            <div id="itinerary-container" class="itinerary-container">
+                <h3 class="section-title">Your Custom Itinerary</h3>
+                <div id="itinerary-content">
+                    <!-- Day 1 -->
+                    <div class="itinerary-day">
+                        <div class="day-header">
+                            <div class="day-number">1</div>
+                            <div class="day-title">Exploration Day</div>
+                        </div>
+                        <div class="day-activities">
+                            <div class="activity-item">
+                                <div class="activity-time">09:00 AM - 11:30 AM</div>
+                                <div class="activity-name">City Walking Tour</div>
+                                <div class="activity-desc">Start your trip with a guided walking tour of the historic city center. Learn about the local history and architecture while getting oriented.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> City Center
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">12:00 PM - 01:30 PM</div>
+                                <div class="activity-name">Lunch at Local Market</div>
+                                <div class="activity-desc">Sample authentic local cuisine at the bustling market. Try regional specialties and interact with local vendors.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Central Market
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">02:00 PM - 04:30 PM</div>
+                                <div class="activity-name">Museum Visit</div>
+                                <div class="activity-desc">Explore the city's premier museum with artifacts dating back centuries. Don't miss the special exhibition on the second floor.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> National Museum
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">05:00 PM - 07:00 PM</div>
+                                <div class="activity-name">Sunset Viewpoint</div>
+                                <div class="activity-desc">Head to the city's famous viewpoint to watch the sunset over the skyline. Perfect photo opportunity!</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Hilltop Park
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">07:30 PM - 09:30 PM</div>
+                                <div class="activity-name">Dinner & Local Entertainment</div>
+                                <div class="activity-desc">Enjoy dinner at a restaurant featuring traditional music and dance performances.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Cultural Quarter
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Day 2 -->
+                    <div class="itinerary-day">
+                        <div class="day-header">
+                            <div class="day-number">2</div>
+                            <div class="day-title">Nature & Adventure</div>
+                        </div>
+                        <div class="day-activities">
+                            <div class="activity-item">
+                                <div class="activity-time">08:30 AM - 12:30 PM</div>
+                                <div class="activity-name">Hiking Excursion</div>
+                                <div class="activity-desc">Embark on a guided hiking trip to the nearby mountains. Moderate difficulty with stunning views along the trail.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Mountain Trail
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">01:00 PM - 02:30 PM</div>
+                                <div class="activity-name">Picnic Lunch</div>
+                                <div class="activity-desc">Enjoy a prepared picnic lunch with local specialties while taking in the natural scenery.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Scenic Overlook
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">03:00 PM - 05:00 PM</div>
+                                <div class="activity-name">Waterfall Visit</div>
+                                <div class="activity-desc">Visit the region's famous waterfall. Take a refreshing dip in the natural pool if weather permits.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Crystal Falls
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">06:00 PM - 08:00 PM</div>
+                                <div class="activity-name">Farm-to-Table Dinner</div>
+                                <div class="activity-desc">Dine at an organic farm restaurant featuring ingredients harvested that same day.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Green Valley Farm
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Day 3 -->
+                    <div class="itinerary-day">
+                        <div class="day-header">
+                            <div class="day-number">3</div>
+                            <div class="day-title">Cultural Immersion</div>
+                        </div>
+                        <div class="day-activities">
+                            <div class="activity-item">
+                                <div class="activity-time">09:00 AM - 10:30 AM</div>
+                                <div class="activity-name">Local Craft Workshop</div>
+                                <div class="activity-desc">Participate in a traditional craft workshop where you'll learn techniques passed down through generations.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Artisan Quarter
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">11:00 AM - 12:30 PM</div>
+                                <div class="activity-name">Historical Site Tour</div>
+                                <div class="activity-desc">Visit the ancient temple complex with a knowledgeable guide who will explain its historical and cultural significance.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Temple Complex
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">01:00 PM - 02:30 PM</div>
+                                <div class="activity-name">Cooking Class</div>
+                                <div class="activity-desc">Learn to prepare traditional dishes in a hands-on cooking class, then enjoy your creations for lunch.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Culinary School
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">03:00 PM - 05:00 PM</div>
+                                <div class="activity-name">Local Market Shopping</div>
+                                <div class="activity-desc">Browse the artisan market for unique souvenirs and handcrafted items to take home.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> Artisan Market
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-time">06:30 PM - 09:00 PM</div>
+                                <div class="activity-name">Farewell Dinner Cruise</div>
+                                <div class="activity-desc">End your trip with a scenic dinner cruise along the river, featuring local cuisine and entertainment.</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i> River Port
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="download-btn">
+                        <i class="fas fa-download"></i> Download Itinerary PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                // Redirect to login page if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Set default date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('start-date').valueAsDate = tomorrow;
+
+            // Interest chips functionality
+            const interestChips = document.querySelectorAll('.interest-chip');
+            interestChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+
+            // Load user preferences if available
+            const userPreferences = localStorage.getItem('userPreferences');
+            if (userPreferences) {
+                const preferences = JSON.parse(userPreferences);
+                console.log('Loaded user preferences for itinerary planning:', preferences);
+                
+                // Automatically select interests based on user preferences
+                if (preferences.interests) {
+                    for (const [interest, selected] of Object.entries(preferences.interests)) {
+                        if (selected) {
+                            const chip = document.querySelector(`.interest-chip[data-interest="${interest}"]`);
+                            if (chip) chip.classList.add('active');
+                        }
+                    }
+                }
+            }
+
+            // Generate itinerary button
+            const generateBtn = document.getElementById('generate-plan-btn');
+            const itineraryContainer = document.getElementById('itinerary-container');
+            
+            generateBtn.addEventListener('click', function() {
+                const destination = document.getElementById('destination').value;
+                if (!destination) {
+                    alert('Please enter a destination');
+                    return;
+                }
+                
+                // Show loading state
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+                this.disabled = true;
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    // Show the itinerary
+                    itineraryContainer.style.display = 'block';
+                    
+                    // Scroll to itinerary
+                    itineraryContainer.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Reset button
+                    this.innerHTML = '<i class="fas fa-magic"></i> Generate Itinerary';
+                    this.disabled = false;
+                }, 2000);
+            });
+
+            // Download button functionality
+            const downloadBtn = document.querySelector('.download-btn');
+            downloadBtn.addEventListener('click', function() {
+                alert('In a real app, this would download a PDF version of your itinerary that you can access offline.');
+            });
+        });
+    </script>
+</body>
+</html>
