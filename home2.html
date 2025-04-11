@@ -6,7 +6,6 @@
     <title>Home - AR Tourist Guide</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -206,38 +205,101 @@
             text-transform: lowercase;
             letter-spacing: 1px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
         }
 
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .location-search {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            width: 180px;
+            transition: all 0.3s ease;
+        }
+
+        .location-search::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .location-search:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            width: 220px;
+        }
+
+        .search-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
         .map-container {
-            padding: 0;
-            height: 300px;
-            position: relative;
+            padding: 30px;
+            min-height: 280px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
             background: rgba(255, 255, 255, 0.05);
+            flex-direction: column;
         }
 
-        #map {
+        #places {
             width: 100%;
-            height: 100%;
-            z-index: 1;
-            border-radius: 0 0 25px 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            text-align: center;
         }
 
-        /* Fix for Leaflet map controls */
-        .leaflet-control-container .leaflet-top,
-        .leaflet-control-container .leaflet-bottom {
-            z-index: 10;
+        .place {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .leaflet-popup-content-wrapper {
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .place:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .leaflet-popup-content {
-            margin: 12px 15px;
-            font-family: 'Poppins', sans-serif;
+        .place strong {
+            font-size: 18px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Loading and no results messages */
+        .loading, .no-results {
+            padding: 20px;
+            text-align: center;
+            width: 100%;
         }
 
         /* Assistant buttons */
@@ -270,26 +332,10 @@
             z-index: 1;
         }
 
-        .assistant-button .assistant-icon {
+        .assistant-button i {
             font-size: 28px;
             margin-bottom: 15px;
             transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .assistant-button .assistant-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .assistant-button .assistant-text span {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .assistant-button .assistant-text p {
-            font-size: 14px;
-            color: var(--medium-text);
         }
 
         .assistant-button::after {
@@ -311,7 +357,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .assistant-button:hover .assistant-icon {
+        .assistant-button:hover i {
             transform: scale(1.3) translateY(-5px);
         }
 
@@ -467,31 +513,27 @@
         <div class="map-section">
             <div class="map-header">
                 <span>nearby locations</span>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search places..." class="location-search">
+                    <button onclick="searchPlaces()" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
             <div class="map-container">
-                <div id="map"></div>
+                <div id="places">Search for nearby attractions, restaurants, or landmarks</div>
             </div>
         </div>
         
-        <!-- Assistant buttons -->
+        <!-- Assistant Buttons -->
         <div class="assistant-buttons">
-            <a href="chatbot/index.html" class="assistant-button">
-                <div class="assistant-icon">
-                    <i class="fas fa-comments"></i>
-                </div>
-                <div class="assistant-text">
-                    <span>virtual travel assistant</span>
-                    <p>ask me anything about your trip</p>
-                </div>
-            </a>
+            <button class="assistant-button">
+                <i class="fas fa-comments"></i>
+                virtual travel assistant chatbot
+            </button>
             <button id="ar-btn-new" class="assistant-button">
-                <div class="assistant-icon">
-                    <i class="fas fa-vr-cardboard"></i>
-                </div>
-                <div class="assistant-text">
-                    <span>AR tour assistant</span>
-                    <p>explore places in augmented reality</p>
-                </div>
+                <i class="fas fa-vr-cardboard"></i>
+                AR tour assistant
             </button>
         </div>
         
@@ -502,18 +544,138 @@
         </div>
     </div>
 
-    <!-- Leaflet JS for maps -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHrUYd_UJ_JLtzdUFU7jpvUgGH-IN8y64&libraries=places&callback=initPlaces" async defer></script>
     <script>
-        // Geoapify API key
-        const apiKey = "89618a3efe194bf590259afd9f2a9b75";
-        let map;
-        let markers = [];
-        let userLocation = { lat: 28.7041, lng: 77.1025 }; // Default: Delhi
+        // Initialize Places API
+        function initPlaces() {
+            console.log('Google Maps API loaded');
+            // Create a PlacesService instance with a dummy div element
+            const placesService = new google.maps.places.PlacesService(
+                document.createElement('div')
+            );
+            
+            // Store the service in the global window object for access in other functions
+            window.placesService = placesService;
+            
+            // Try to get user's location immediately
+            getUserLocation();
+            
+            // Add event listener for Enter key on search input
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        searchPlaces();
+                    }
+                });
+            }
+        }
+        
+        // Get user's location
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    // Store the user's location for places search
+                    window.userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    console.log('User location obtained:', window.userLocation);
+                    
+                    // Automatically search for nearby attractions when location is obtained
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput && searchInput.value.trim() === '') {
+                        searchInput.value = 'attractions';
+                        searchPlaces();
+                    }
+                }, function(error) {
+                    console.error('Error getting location:', error);
+                    // Set a default location (Delhi, India)
+                    window.userLocation = { lat: 28.7041, lng: 77.1025 };
+                    
+                    // Automatically search for nearby attractions with default location
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput && searchInput.value.trim() === '') {
+                        searchInput.value = 'attractions';
+                        searchPlaces();
+                    }
+                });
+            } else {
+                console.log('Geolocation not supported');
+                // Set a default location if geolocation is not supported
+                window.userLocation = { lat: 28.7041, lng: 77.1025 };
+                
+                // Automatically search for nearby attractions with default location
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput && searchInput.value.trim() === '') {
+                    searchInput.value = 'attractions';
+                    searchPlaces();
+                }
+            }
+        }
+
+        // Google Places API search function
+        function searchPlaces() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            const placesDiv = document.getElementById('places');
+            placesDiv.innerHTML = '<div class="loading">Searching for places...</div>';
+
+            // Use the user's location if available, otherwise use a default location
+            const searchLocation = window.userLocation || { lat: 28.7041, lng: 77.1025 }; // Default: Delhi
+            const location = new google.maps.LatLng(searchLocation.lat, searchLocation.lng);
+
+            console.log('Searching for:', query, 'near', searchLocation);
+
+            const request = {
+                query: query,
+                location: location,
+                radius: 5000 // Search within 5km radius
+            };
+
+            // Make sure placesService is available
+            if (!window.placesService) {
+                window.placesService = new google.maps.places.PlacesService(
+                    document.createElement('div')
+                );
+            }
+
+            // Perform the text search
+            window.placesService.textSearch(request, function(results, status) {
+                console.log('Places API response:', status, results);
+                
+                if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+                    placesDiv.innerHTML = '';
+                    
+                    // Display up to 5 results
+                    results.slice(0, 5).forEach(place => {
+                        const div = document.createElement('div');
+                        div.className = 'place';
+                        div.innerHTML = `
+                            <strong>${place.name}</strong>
+                            <div>📍 ${place.formatted_address || 'Address not available'}</div>
+                            <div>⭐ ${place.rating ? place.rating + '/5' : 'No ratings yet'}</div>
+                        `;
+                        
+                        // Make the place clickable to open in Google Maps
+                        div.addEventListener('click', function() {
+                            window.open(`https://www.google.com/maps/place/?q=place_id:${place.place_id}`, '_blank');
+                        });
+                        
+                        placesDiv.appendChild(div);
+                    });
+                } else {
+                    placesDiv.innerHTML = '<div class="no-results">No places found. Try a different search term.</div>';
+                    console.error('Places search error:', status);
+                }
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing app...');
-            
             // Check if user is logged in
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (!isLoggedIn) {
@@ -521,9 +683,6 @@
                 window.location.href = 'index.html';
                 return;
             }
-
-            // Initialize map with a slight delay to ensure DOM is ready
-            setTimeout(initMap, 500);
 
             // DOM Elements
             const arBtn = document.getElementById('ar-btn');
@@ -585,158 +744,8 @@
                     console.log('User is interested in adventure activities');
                 }
             }
-
-            // Try to get user's location
-            getUserLocation();
         });
-
-        // Initialize the map
-        function initMap() {
-            console.log('Initializing map...');
-            
-            // Check if map container exists
-            const mapContainer = document.getElementById('map');
-            if (!mapContainer) {
-                console.error('Map container not found!');
-                return;
-            }
-            
-            try {
-                // Create the map with default view
-                map = L.map("map", {
-                    zoomControl: true,
-                    attributionControl: true
-                }).setView([userLocation.lat, userLocation.lng], 13);
-                
-                console.log('Map object created');
-
-                // Add Geoapify Carto tile layer
-                L.tileLayer(`https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?&apiKey=${apiKey}`, {
-                    attribution: '&copy; <a href="https://www.geoapify.com/">Geoapify</a>',
-                    maxZoom: 20
-                }).addTo(map);
-                
-                console.log('Tile layer added');
-
-                // Add a marker for user's location
-                L.marker([userLocation.lat, userLocation.lng])
-                    .addTo(map)
-                    .bindPopup("<strong>Your Location</strong>")
-                    .openPopup();
-                    
-                console.log('User marker added');
-
-                // Force a map resize to handle any rendering issues
-                setTimeout(function() {
-                    map.invalidateSize();
-                    console.log('Map size invalidated');
-                    
-                    // Automatically search for attractions
-                    searchNearbyAttractions();
-                }, 1000);
-            } catch (error) {
-                console.error('Error initializing map:', error);
-            }
-        }
-
-        // Get user's location
-        function getUserLocation() {
-            console.log('Getting user location...');
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    // Update user location
-                    userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    console.log('User location obtained:', userLocation);
-                    
-                    // Update map view if it exists
-                    if (map) {
-                        try {
-                            map.setView([userLocation.lat, userLocation.lng], 13);
-                            
-                            // Clear old markers
-                            markers.forEach(m => m.remove());
-                            markers = [];
-                            
-                            // Add a marker for user's location
-                            L.marker([userLocation.lat, userLocation.lng])
-                                .addTo(map)
-                                .bindPopup("<strong>Your Location</strong>")
-                                .openPopup();
-                                
-                            // Search again with new location
-                            searchNearbyAttractions();
-                        } catch (error) {
-                            console.error('Error updating map with user location:', error);
-                        }
-                    }
-                }, function(error) {
-                    console.error('Error getting location:', error);
-                });
-            }
-        }
-
-        // Search for nearby attractions automatically
-        function searchNearbyAttractions() {
-            console.log('Searching for nearby attractions...');
-            
-            // Clear old markers except user location
-            markers.forEach(m => m.remove());
-            markers = [];
-
-            // Build the search URL with user's location to find attractions
-            const url = `https://api.geoapify.com/v1/geocode/search?text=attractions&filter=circle:${userLocation.lng},${userLocation.lat},5000&limit=5&apiKey=${apiKey}`;
-            console.log('Search URL:', url);
-
-            fetch(url)
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    return response.json();
-                })
-                .then(result => {
-                    console.log('Search results:', result);
-                    
-                    if (!result.features || result.features.length === 0) {
-                        console.log("No attractions found nearby.");
-                        return;
-                    }
-
-                    // Add markers for each place
-                    result.features.forEach(place => {
-                        const { lat, lon, formatted, name } = place.properties;
-                        const displayName = name || formatted;
-                        
-                        console.log('Adding marker for:', displayName);
-                        
-                        const marker = L.marker([lat, lon])
-                            .addTo(map)
-                            .bindPopup(`<strong>${displayName}</strong><br>${formatted}`);
-                            
-                        marker.on('click', function() {
-                            map.setView([lat, lon], 15);
-                        });
-                        
-                        markers.push(marker);
-                    });
-
-                    // Adjust map view to show all markers
-                    if (markers.length > 0) {
-                        try {
-                            const group = L.featureGroup(markers);
-                            const bounds = group.getBounds().pad(0.1);
-                            map.fitBounds(bounds);
-                            console.log('Map view adjusted to show all markers');
-                        } catch (error) {
-                            console.error('Error adjusting map view:', error);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching location data:', error);
-                });
-        }
     </script>
 </body>
-</html>
+</html>// Geoapify API key
+const apiKey = "89618a3efe194bf590259afd9f2a9b75";
