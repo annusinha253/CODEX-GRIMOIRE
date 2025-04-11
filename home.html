@@ -79,19 +79,25 @@
             font-size: 18px;
             color: var(--white);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(10px);
         }
 
         .search-bar::placeholder {
             color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
         }
 
         .search-bar:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3), 0 10px 25px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
+            transform: translateY(-4px) scale(1.01);
             background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .search-bar:focus::placeholder {
+            opacity: 0.5;
+            transform: translateX(10px);
         }
 
         /* Feature buttons row */
@@ -118,13 +124,19 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
             z-index: 1;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-button i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .feature-button::before {
@@ -142,13 +154,23 @@
         }
 
         .feature-button:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.03);
             color: var(--white);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
+        .feature-button:hover i {
+            transform: scale(1.2) rotate(5deg);
+        }
+
         .feature-button:hover::before {
             opacity: 1;
+        }
+
+        .feature-button:active {
+            transform: translateY(-2px) scale(0.98);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s;
         }
 
         /* Map section */
@@ -158,14 +180,20 @@
             overflow: hidden;
             margin-bottom: 10px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
+            cursor: pointer;
         }
 
         .map-section:hover {
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-            transform: translateY(-5px);
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .map-section:active {
+            transform: translateY(-5px) scale(0.99);
+            transition: all 0.1s;
         }
 
         .map-header {
@@ -226,7 +254,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
@@ -234,13 +262,57 @@
         }
 
         .assistant-button i {
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: 28px;
+            margin-bottom: 15px;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .assistant-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
         }
 
         .assistant-button:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px) scale(1.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .assistant-button:hover i {
+            transform: scale(1.3) translateY(-5px);
+        }
+
+        .assistant-button:active {
+            transform: translateY(-2px) scale(0.95);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.1s;
+        }
+
+        .assistant-button:active::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                opacity: 1;
+                transform: scale(0, 0);
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
         }
 
         /* Hidden original buttons (for functionality) */
